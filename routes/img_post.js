@@ -19,7 +19,8 @@ router.post("/", upload, uploadController, async (req, res) => {
     console.log("POST REQUEST: ", req.body);
     req.body.userId = req.body.userId;
     req.body.img = req.body.image;
-    req.body.location = req.body.location;
+    req.body.location = req.body.location || "";
+    req.body.desc = req.body.desc || "";
     req.body.username = req.body.username;
     delete req.body.image;
     const newPost = await new ImagePost(req.body);
@@ -33,7 +34,7 @@ router.post("/", upload, uploadController, async (req, res) => {
     }
     catch(error) {
         res.status(500).json({
-            statusCode: 200,
+            statusCode: 500,
             statusMessage: "Couldn't upload post.",
             error: error
         });
