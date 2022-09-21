@@ -26,6 +26,7 @@ router.post("/", upload, uploadController, async (req, res) => {
     const newPost = await new ImagePost(req.body);
     try {
         const savedPost = await newPost.save();
+        console.log("SavedPost: ",savedPost);
         res.status(200).json({
             statusCode: 200,
             statusMessage: "Post added successfully.",
@@ -33,6 +34,7 @@ router.post("/", upload, uploadController, async (req, res) => {
         });
     }
     catch(error) {
+        console.log("ErrorPost: ",error);
         res.status(500).json({
             statusCode: 500,
             statusMessage: "Couldn't upload post.",
@@ -62,17 +64,19 @@ router.put("/edit_post/:id", async (req, res) => {
 router.delete("/delete_post/:id", async (req, res) => {
     try {
         const postToDelete = await ImagePost.findById(req.params.id);
-        if(postToDelete.userId === req.body.userId) {
-            // await ImagePost.findByIdAndDelete(req.params.id);
-            await postToDelete.deleteOne();
-            res.status(200).json("Post Deleted Successfully");
-        }
-        else {
-            res.status(403).json("Unable to delete the post.");
-        }
+        await postToDelete.deleteOne();
+        res.status(200).json({
+            statusCode: 200,
+            statusMessage: "Post delete successfully.",
+            postDeleted: true
+        });
     }
     catch(error) {
-        res.status(500).json("Post does not exists.");
+        res.status(500).json({
+            statusCode: 500,
+            statusMessage: "Something went wrong. Please try again later",
+            postDeleted: false
+        });
     }
 })
 
@@ -161,13 +165,19 @@ router.get("/:id/timeline/feeds", async (req, res) => {
 // Add comment to post
 router.post("/:id/comment", async (req, res) => {
     try {
-        const findImgToAddComment = await ImagePost.findById(req.params.id);
+        const findImgToAddComment = await ImagePost.findById(req.params.id);  // Img ID
         await findImgToAddComment.updateOne({$push: {comments: {username: req.body.username, comment: req.body.comment}}})
-        res.status(200).json(findImgToAddComment);
+        // res.status(200).json(findImgToAddComment);
+        res.status(200).json({
+            statusCode: 200,
+            statusMessage: "Comment Added"
+        });
     }
     catch(error) {
         console.log("ERROR: ",error);
-        res.status(500).json("Comment could not be added.");
+        res.status(500).json({
+            statusCode: 500,
+            statusMessage: "Comment could not be added."});
     }
 })
 
