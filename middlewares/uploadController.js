@@ -5,8 +5,8 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const s3 = new AWS.S3({
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_KEY
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 });
 
 function uploadToS3(req, res, next) {
@@ -15,7 +15,7 @@ function uploadToS3(req, res, next) {
         const fileType = myFile[myFile.length - 1];
         const uploadParams = {
             Key: `${uuid()}.${fileType}`,
-            Bucket: process.env.AWS_BUCKET_NAME,
+            Bucket: process.env.S3_BUCKET,
             Body: req.file.buffer
         }
         s3.upload(uploadParams).promise()
