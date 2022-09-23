@@ -10,7 +10,6 @@ const s3 = new AWS.S3({
 });
 
 function uploadToS3(req, res, next) {
-    console.log("Upload Controleler starts: ", process.env);
     if(req.file) {
         let myFile = req.file.originalname.split(".");
         const fileType = myFile[myFile.length - 1];
@@ -19,7 +18,6 @@ function uploadToS3(req, res, next) {
             Bucket: process.env.S3_BUCKET,
             Body: req.file.buffer
         }
-        console.log("Upload params created.");
         try {
             s3.upload(uploadParams).promise()
                 .then(data => {
@@ -29,7 +27,7 @@ function uploadToS3(req, res, next) {
                 })
         }
         catch(error) {
-            console.log("Upload ControllerError: ", error);
+            console.log("Error: ", error);
         }
     }
     else {
