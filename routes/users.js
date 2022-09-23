@@ -144,7 +144,7 @@ router.put("/:id/unfollow", async (req, res) => {
 router.post('/search/people', async (req, res) => {
     try {
         const search = req.body.searchedKeyword;
-        const users = await UserModel.find({$or: [{username: new RegExp(search, 'i')}]});
+        const users = await UserModel.find({username: new RegExp(search, 'i')});
         !users.length && res.status(200).json({
             statusCode: 200,
             statusMessage: "No Users found",
