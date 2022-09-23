@@ -6,7 +6,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const cors = require('cors');
 
-app.use(cors({ origin: 'https://socialize-ourselfs.netlify.app' }));
+app.use(cors());
 
 // routes
 const authRoute = require('./routes/auth');
