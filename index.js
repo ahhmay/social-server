@@ -6,7 +6,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const cors = require('cors');
 
-app.use(cors({ origin: 'https://social-server-ahhmay.herokuapp.com' }));
+app.use(cors());
 
 // routes
 const authRoute = require('./routes/auth');
