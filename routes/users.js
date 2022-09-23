@@ -145,10 +145,10 @@ router.post('/search/people', async (req, res) => {
     try {
         const search = req.body.searchedKeyword;
         const users = await UserModel.find({username: new RegExp(search, 'i')});
-        !users.length && res.status(200).json({
+        (!users.length || search.length===0) && res.status(200).json({
             statusCode: 200,
             statusMessage: "No Users found",
-            users: users
+            users: []
         })
         users.length && res.status(200).json({
             statusCode: 200,
