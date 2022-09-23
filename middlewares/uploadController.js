@@ -10,6 +10,7 @@ const s3 = new AWS.S3({
 });
 
 function uploadToS3(req, res, next) {
+    console.log("Upload Controleler starts: ", process.env);
     if(req.file) {
         let myFile = req.file.originalname.split(".");
         const fileType = myFile[myFile.length - 1];
@@ -18,12 +19,18 @@ function uploadToS3(req, res, next) {
             Bucket: process.env.S3_BUCKET,
             Body: req.file.buffer
         }
-        s3.upload(uploadParams).promise()
-            .then(data => {
-                imagePath = data.Location;
-                req.body.image = data.Location;
-                next();
-            })
+        console.log("Upload params created.");
+        try {
+            s3.upload(uploadParams).promise()
+                .then(data => {
+                    imagePath = data.Location;
+                    req.body.image = data.Location;
+                    next();
+                })
+        }
+        catch(error) {
+            console.log("Upload ControllerError: ", error);
+        }
     }
     else {
         req.body.image = "";
