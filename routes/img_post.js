@@ -139,10 +139,10 @@ router.get("/:userid/allposts", async (req, res) => {
 router.get("/:id/timeline/feeds", async (req, res) => {
     try {
         const currentUser = await UserModel?.findById(req.params.id);
-        const userPosts = await ImagePost?.find({userId: currentUser._id});
+        const userPosts = await ImagePost?.find({userId: currentUser._id}).sort({createdAt: -1});
         const friendPosts = await Promise.all(
             currentUser?.following?.map(friendId => {
-                return ImagePost?.find({ userId: friendId });
+                return ImagePost?.find({ userId: friendId }).sort({createdAt: -1})
             })
         );
         res.status(200).json({
@@ -153,8 +153,9 @@ router.get("/:id/timeline/feeds", async (req, res) => {
     }
     catch(error) {
         res.status(500).json({
-            statusCode: 200,
+            statusCode: 500,
             statusMessage: "Error fetching feeds",
+            feeds: [],
             error: error
         });
     }
